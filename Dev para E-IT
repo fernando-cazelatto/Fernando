@@ -1,0 +1,33 @@
+DATA: gv_tnum TYPE tdnumberin,
+      gv_len  TYPE i.
+
+
+CONSTANTS: c_roman TYPE tdnumberin VALUE 'ROMAN',
+           c_arabi TYPE tdnumberin VALUE 'ARABIC'.
+
+SELECTION-SCREEN : BEGIN OF BLOCK b WITH FRAME TITLE text-001.
+PARAMETERS: r_roman RADIOBUTTON GROUP r1,
+            r_arabi RADIOBUTTON GROUP r1.
+PARAMETERS: p_numb  TYPE char10 OBLIGATORY.
+SELECTION-SCREEN : END OF BLOCK b.
+
+START-OF-SELECTION.
+
+  IF r_roman IS NOT INITIAL.
+    gv_tnum = c_roman.
+  ELSE.
+    gv_tnum = c_arabi.
+  ENDIF.
+
+  CALL FUNCTION 'CONVERT_NUMBER'
+    EXPORTING
+      tdlcount   = p_numb
+      tdnumberin = gv_tnum
+      tdupper    = abap_true
+      tdnumfixc  = space
+      tdnumoutl  = 10
+    IMPORTING
+      string     = gv_out
+      length     = gv_len.
+
+  WRITE gv_out.
